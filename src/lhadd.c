@@ -354,6 +354,7 @@ temporary_to_new_archive_file(new_archive_size)
 {
     FILE *oafp, *nafp;
 
+    message("b");
     if (!strcmp(new_archive_name, "-")) {
         nafp = stdout;
         writing_filename = "standard output";
@@ -362,12 +363,14 @@ temporary_to_new_archive_file(new_archive_size)
 #endif
     }
     else {
-        unlink(new_archive_name);
-        if (rename(temporary_name, new_archive_name) == 0)
+        message("c");
+        xunlink(new_archive_name);
+        if (xrename(temporary_name, new_archive_name) == 0)
             return;
         nafp = xfopen(new_archive_name, WRITE_BINARY);
         writing_filename = archive_name;
     }
+    message("d");
 
     oafp = xfopen(temporary_name, READ_BINARY);
     reading_filename = temporary_name;
@@ -604,8 +607,9 @@ cmd_add()
 
     /* copy temporary file to new archive file */
     if (!noexec) {
+        message("a");
         if (strcmp(new_archive_name, "-") == 0 ||
-            rename(temporary_name, new_archive_name) < 0) {
+            xrename(temporary_name, new_archive_name) < 0) {
 
             temporary_to_new_archive_file(new_archive_size);
         }

@@ -333,3 +333,25 @@ str_safe_copy(char *dst, const char *src, int dstsz)
 
     return i;
 }
+
+int
+xunlink(char *name)
+{
+    int ret = unlink(name);
+    message("unlink(\"%s\")", name);
+    if (ret < 0) {
+        error("fail to unlink(\"%s\"): %s", name, strerror(errno));
+    }
+    return ret;
+}
+
+int
+xrename(char *src, char *dst)
+{
+    int ret = rename(src, dst);
+    message("rename(\"%s\", \"%s\")", src, dst);
+    if (ret < 0) {
+        error("fail to rename(\"%s\", \"%s\"): %s", src, dst, strerror(errno));
+    }
+    return ret;
+}
